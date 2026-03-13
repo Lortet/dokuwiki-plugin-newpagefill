@@ -19,6 +19,8 @@ donationurl:
 screenshot_img :
 ----
 
+🇫🇷 **Français** | [[plugin:newpagefill|🇬🇧 English]] | [[de:plugin:newpagefill|🇩🇪 Deutsch]] | [[es:plugin:newpagefill|🇪🇸 Español]]
+
 ===== Installation =====
 
 Installer le plugin depuis le [[fr:plugin:extension|Gestionnaire d'extensions]].
@@ -33,7 +35,7 @@ Le plugin **newpagefill** ajoute un assistant léger pour créer une nouvelle pa
   * ouverture directe de l'éditeur sur la page cible.
 
 Il complète aussi le système de templates natif de DokuWiki :
-  * utilisation de ''_template.txt'' ou ''__template.txt'' si présents ;
+  * utilisation de ''_template.txt'' ou ''%%__template.txt%%'' si présents ;
   * ajout du placeholder ''@TITLE@'' dans le contenu injecté ;
   * fallback vers un template propre au plugin si aucun template natif n'existe.
 
@@ -68,7 +70,7 @@ La valeur de ''@TITLE@'' est calculée ainsi :
 Le plugin respecte l'ordre suivant :
   * template déjà fourni par DokuWiki ;
   * ''_template.txt'' dans le dossier cible ;
-  * ''__template.txt'' dans le namespace courant ou parent ;
+  * %%__template.txt%% dans le namespace courant ou parent ;
   * template de secours configuré dans le plugin.
 
 ===== Fonction JavaScript =====

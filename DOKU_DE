@@ -19,6 +19,8 @@ donationurl:
 screenshot_img :
 ----
 
+[[fr:plugin:newpagefill|🇫🇷 Français]] | [[plugin:newpagefill|🇬🇧 English]] | 🇩🇪 **Deutsch** | [[es:plugin:newpagefill|🇪🇸 Español]]
+
 ===== Installation =====
 
 Das Plugin über den [[plugin:extension|Erweiterungs-Manager]] installieren.
@@ -33,7 +35,7 @@ Das Plugin **newpagefill** fügt einen leichtgewichtigen Assistenten zur Seitene
   * Editor direkt auf der Zielseite öffnen.
 
 Es ergänzt auch das native DokuWiki-Vorlagensystem:
-  * ''_template.txt'' oder ''__template.txt'' verwenden, wenn vorhanden;
+  * ''_template.txt'' oder ''%%__template.txt%%'' verwenden, wenn vorhanden;
   * Unterstützung für den Platzhalter ''@TITLE@'' im injizierten Inhalt hinzufügen;
   * auf eine plugin-eigene Vorlage zurückfallen, wenn keine native Vorlage vorhanden ist.
 
@@ -68,7 +70,7 @@ Der Wert von ''@TITLE@'' wird wie folgt berechnet:
 Das Plugin folgt dieser Reihenfolge:
   * bereits von DokuWiki bereitgestellte Vorlage;
   * ''_template.txt'' im Zielordner;
-  * ''__template.txt'' im aktuellen oder übergeordneten Namensraum;
+  * %%__template.txt%% im aktuellen oder übergeordneten Namensraum;
   * im Plugin konfigurierte Ersatzvorlage.
 
 ===== JavaScript-Funktion =====
