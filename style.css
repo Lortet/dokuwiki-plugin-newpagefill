@@ -1,0 +1,55 @@
+#newpagefill_overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+}
+
+#newpagefill_overlay.is-open {
+  display: flex;
+}
+
+.newpagefill_dialog {
+  width: 92vw;
+  max-width: 520px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+  padding: 18px;
+}
+
+.newpagefill_dialog h3 {
+  margin: 0 0 14px;
+}
+
+.newpagefill_label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: bold;
+}
+
+.newpagefill_dialog input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.newpagefill_dialog select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.newpagefill_error {
+  min-height: 1.4em;
+  margin: 10px 0 0;
+  color: #b42318;
+}
+
+.newpagefill_actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}

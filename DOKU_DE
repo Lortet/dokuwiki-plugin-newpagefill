@@ -1,0 +1,106 @@
+====== Newpagefill Plugin ======
+
+---- plugin ----
+description: Seitenerstellungs-Assistent mit Vorfüllung und @TITLE@-Unterstützung
+author     : Valentin LORTET
+email      : contact@valentinlortet.fr
+type       : Action
+lastupdate : 2026-03-13
+compatible : Librarian
+depends    :
+conflicts  :
+similar    :
+tags       : Page, Creation, Template, Namespace, JavaScript
+
+downloadurl: https://github.com/Lortet/dokuwiki-plugin-newpagefill/zipball/master
+bugtracker : https://github.com/Lortet/dokuwiki-plugin-newpagefill/issues
+sourcerepo : https://github.com/Lortet/dokuwiki-plugin-newpagefill/
+donationurl:
+screenshot_img :
+----
+
+===== Installation =====
+
+Das Plugin über den [[plugin:extension|Erweiterungs-Manager]] installieren.
+
+===== Beschreibung =====
+
+Das Plugin **newpagefill** fügt einen leichtgewichtigen Assistenten zur Seitenerstellung hinzu:
+  * Titel eingeben;
+  * Bezeichner automatisch vorschlagen;
+  * optional den Namensraum eingeben;
+  * Erstellungsmodus gemäß Konfiguration wählen;
+  * Editor direkt auf der Zielseite öffnen.
+
+Es ergänzt auch das native DokuWiki-Vorlagensystem:
+  * ''_template.txt'' oder ''__template.txt'' verwenden, wenn vorhanden;
+  * Unterstützung für den Platzhalter ''@TITLE@'' im injizierten Inhalt hinzufügen;
+  * auf eine plugin-eigene Vorlage zurückfallen, wenn keine native Vorlage vorhanden ist.
+
+===== Konfiguration =====
+
+^ Name ^ Beschreibung ^ Standardwert ^
+| template | Ersatzvorlage, die verwendet wird, wenn keine native DokuWiki-Seitenvorlage gefunden wird. | ''===== @TITLE@ ====='' |
+| default_start_mode | Standard-Erstellungsmodus. | ''start'' |
+
+Mögliche Werte für ''default_start_mode'':
+  * ''ask'': Auswahl im Dialog anzeigen;
+  * ''start'': Startseite erstellen;
+  * ''none'': direkte Seite erstellen;
+  * ''same'': Unterseite mit gleichem Namen erstellen.
+
+===== Platzhalter =====
+
+Die Plugin-Vorlage kann enthalten:
+  * ''@TITLE@'': vom Plugin berechneter Titel (spezifisch für newpagefill);
+  * alle nativen DokuWiki-Platzhalter: ''@ID@'', ''@NS@'', ''@PAGE@'', ''@USER@'', ''@DATE@'' usw. (vom DokuWiki-Core verwaltet, nicht von diesem Plugin).
+
+===== Verhalten von @TITLE@ =====
+
+Der Wert von ''@TITLE@'' wird wie folgt berechnet:
+  * der ''title''-Wert der Anfrage hat Vorrang;
+  * andernfalls versucht das Plugin, einen Titel aus der Erstellungs-URL zu extrahieren;
+  * wenn die erstellte Seite die Startseite des Namensraums ist, wird der Name des übergeordneten Namensraums verwendet;
+  * ''_''-Zeichen werden durch Leerzeichen ersetzt.
+
+===== Vorlagenkompatibilität =====
+
+Das Plugin folgt dieser Reihenfolge:
+  * bereits von DokuWiki bereitgestellte Vorlage;
+  * ''_template.txt'' im Zielordner;
+  * ''__template.txt'' im aktuellen oder übergeordneten Namensraum;
+  * im Plugin konfigurierte Ersatzvorlage.
+
+===== JavaScript-Funktion =====
+
+Das Plugin stellt die globale Funktion bereit:
+
+<code javascript>
+window.NewPageFill.openCreatePageDialog(options)
+</code>
+
+Beispiel:
+
+<code javascript>
+window.NewPageFill.openCreatePageDialog({
+  namespace: 'wiki:dokumentation',
+  initialTitle: 'Neue Seite'
+});
+</code>
+
+Nützliche Optionen:
+  * ''namespace'': Ziel-Namensraum in DokuWiki;
+  * ''initialTitle'': vorausgefüllter Titel;
+  * ''start'':
+    * ''undefined'' oder ''null'': Plugin-Konfiguration verwenden;
+    * ''@ask@'': Moduswahl erzwingen;
+    * ''true'': Wiki-Startseite verwenden;
+    * ''false'': Seite direkt erstellen;
+    * ''@same@'': Unterseite mit demselben Namen wie der Bezeichner erstellen;
+    * jede andere Zeichenkette: Unterseite mit diesem Wert erstellen;
+  * ''sepchar'': Trennzeichen zur Erzeugung des Bezeichners.
+
+Wenn ''start'' nicht angegeben ist und ''default_start_mode = ask'', bietet der Dialog:
+  * direkte Seite;
+  * Startseite;
+  * Unterseite mit gleichem Namen.

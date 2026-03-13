@@ -1,0 +1,106 @@
+====== Newpagefill Plugin ======
+
+---- plugin ----
+description: Assistant de création de page avec préremplissage et support de @TITLE@
+author     : Valentin LORTET
+email      : contact@valentinlortet.fr
+type       : Action
+lastupdate : 2026-03-13
+compatible : Librarian
+depends    :
+conflicts  :
+similar    :
+tags       : Page, Création, Template, Namespace, JavaScript
+
+downloadurl: https://github.com/Lortet/dokuwiki-plugin-newpagefill/zipball/master
+bugtracker : https://github.com/Lortet/dokuwiki-plugin-newpagefill/issues
+sourcerepo : https://github.com/Lortet/dokuwiki-plugin-newpagefill/
+donationurl:
+screenshot_img :
+----
+
+===== Installation =====
+
+Installer le plugin depuis le [[fr:plugin:extension|Gestionnaire d'extensions]].
+
+===== Description =====
+
+Le plugin **newpagefill** ajoute un assistant léger pour créer une nouvelle page :
+  * saisie d'un titre ;
+  * proposition automatique d'un identifiant de page ;
+  * saisie optionnelle du namespace ;
+  * choix du mode de création selon la configuration ;
+  * ouverture directe de l'éditeur sur la page cible.
+
+Il complète aussi le système de templates natif de DokuWiki :
+  * utilisation de ''_template.txt'' ou ''__template.txt'' si présents ;
+  * ajout du placeholder ''@TITLE@'' dans le contenu injecté ;
+  * fallback vers un template propre au plugin si aucun template natif n'existe.
+
+===== Configuration =====
+
+^ Nom ^ Description ^ Valeur par défaut ^
+| template | Template de secours utilisé si aucun template natif DokuWiki n'est trouvé. | ''===== @TITLE@ ====='' |
+| default_start_mode | Mode par défaut de création. | ''start'' |
+
+Valeurs possibles pour ''default_start_mode'' :
+  * ''ask'' : affiche un sélecteur dans la popup ;
+  * ''start'' : crée une page de démarrage ;
+  * ''none'' : crée une page directe ;
+  * ''same'' : crée une sous-page du même nom.
+
+===== Placeholders =====
+
+Le template du plugin peut contenir :
+  * ''@TITLE@'' : titre calculé par le plugin (spécifique à newpagefill) ;
+  * tous les placeholders natifs DokuWiki : ''@ID@'', ''@NS@'', ''@PAGE@'', ''@USER@'', ''@DATE@'', etc. (gérés par le core DokuWiki, pas par ce plugin).
+
+===== Comportement de @TITLE@ =====
+
+La valeur de ''@TITLE@'' est calculée ainsi :
+  * la valeur ''title'' de la requête est prioritaire ;
+  * sinon, le plugin tente d'extraire un titre depuis l'URL de création ;
+  * si la page créée correspond à la page de démarrage du namespace, le nom du namespace parent est utilisé ;
+  * les caractères ''_'' sont remplacés par des espaces.
+
+===== Compatibilité templates =====
+
+Le plugin respecte l'ordre suivant :
+  * template déjà fourni par DokuWiki ;
+  * ''_template.txt'' dans le dossier cible ;
+  * ''__template.txt'' dans le namespace courant ou parent ;
+  * template de secours configuré dans le plugin.
+
+===== Fonction JavaScript =====
+
+Le plugin expose la fonction globale :
+
+<code javascript>
+window.NewPageFill.openCreatePageDialog(options)
+</code>
+
+Exemple :
+
+<code javascript>
+window.NewPageFill.openCreatePageDialog({
+  namespace: 'wiki:documentation',
+  initialTitle: 'Nouvelle page'
+});
+</code>
+
+Options utiles :
+  * ''namespace'' : namespace DokuWiki de destination ;
+  * ''initialTitle'' : titre prérempli ;
+  * ''start'' :
+    * ''undefined'' ou ''null'' : utilise la configuration du plugin ;
+    * ''@ask@'' : force l'affichage du choix de mode ;
+    * ''true'' : utilise la page de démarrage du wiki ;
+    * ''false'' : crée la page directement ;
+    * ''@same@'' : crée une sous-page portant le même nom que l'identifiant ;
+    * toute autre chaîne : crée une sous-page avec cette valeur ;
+  * ''sepchar'' : séparateur utilisé pour générer l'identifiant.
+
+Si ''start'' n'est pas fourni et que ''default_start_mode = ask'', la popup propose :
+  * page directe ;
+  * page de démarrage ;
+  * sous-page du même nom.

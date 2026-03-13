@@ -1,0 +1,7 @@
+base   newpagefill
+author Valentin LORTET
+email  contact@valentinlortet.fr
+date   2026-03-13
+name   New Page Fill
+desc   Page creation dialog with title suggestion, ID generation and @TITLE@ template support
+url    https://www.dokuwiki.org/plugin:newpagefill
