@@ -41,6 +41,51 @@
             : {};
     }
 
+    function resolveSubpageNamespace(currentPageId, startPageName) {
+        const cleanedId = String(currentPageId || '').trim().replace(/^:+|:+$/g, '');
+        const cleanedStart = String(startPageName || '').trim().replace(/^:+|:+$/g, '');
+        if (!cleanedId) return '';
+        if (!cleanedStart) return cleanedId;
+
+        const parts = cleanedId.split(':');
+        if (parts[parts.length - 1] !== cleanedStart) {
+            return cleanedId;
+        }
+
+        parts.pop();
+        return parts.join(':');
+    }
+
+    function maybeOpenSubpageDialogFromUrl() {
+        const pluginConfig = getPluginConfig();
+        if (!pluginConfig.show_subpage_button_in_page_menu) return;
+        if (!pluginConfig.subpage_action_enabled) return;
+        if (typeof window.URLSearchParams === 'undefined') return;
+
+        const params = new URLSearchParams(window.location.search || '');
+        const shouldOpenFromLegacyParam = params.get('newpagefill') === 'subpage';
+        const shouldOpenFromAction = params.get('do') === 'newpagefill_subpage';
+        if (!shouldOpenFromLegacyParam && !shouldOpenFromAction) return;
+        if (!(window.JSINFO && JSINFO.id)) return;
+
+        params.delete('newpagefill');
+        if (shouldOpenFromAction) {
+            params.delete('do');
+        }
+        const query = params.toString();
+        const nextUrl = window.location.pathname + (query ? '?' + query : '') + window.location.hash;
+        if (window.history && typeof window.history.replaceState === 'function') {
+            window.history.replaceState({}, document.title, nextUrl);
+        }
+
+        window.setTimeout(function () {
+            openCreatePageDialog({
+                namespace: resolveSubpageNamespace(JSINFO.id, pluginConfig.start),
+                initialTitle: '',
+            });
+        }, 0);
+    }
+
     function appendToUrl(base, params) {
         return base + (base.indexOf('?') >= 0 ? '&' : '?') + params;
     }
@@ -284,4 +329,10 @@
         slugifyTitle,
         openCreatePageDialog
     };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', maybeOpenSubpageDialogFromUrl, {once: true});
+    } else {
+        maybeOpenSubpageDialogFromUrl();
+    }
 })();

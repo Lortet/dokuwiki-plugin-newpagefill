@@ -24,6 +24,14 @@ Andernfalls wendet das Plugin seine eigene konfigurierte Ersatzvorlage an.
 Im Konfigurationsmanager:
 - `template`: Ersatzvorlage, die nur verwendet wird, wenn keine native DokuWiki-Seitenvorlage gefunden wird;
 - `default_start_mode`: Standard-Erstellungsmodus (`ask`, `start`, `none`, `same`).
+- `show_subpage_button_in_page_menu`: fuegt dem Seitenmenue eine Schaltflaeche `Unterseite erstellen` hinzu.
+
+Wenn `show_subpage_button_in_page_menu` aktiviert ist, stellt das Plugin außerdem die DokuWiki-Aktion `newpagefill_subpage` bereit.
+Diese Schaltflaeche kann daher ueber `disableactions` ausgeblendet werden, zum Beispiel:
+
+```text
+newpagefill_subpage
+```
 
 Diese Vorlage kann enthalten:
 - `@TITLE@`: vom Plugin berechneter Titel (spezifisch für newpagefill);

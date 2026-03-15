@@ -44,12 +44,16 @@ It also complements the native DokuWiki template system:
 ^ Name ^ Description ^ Default value ^
 | template | Fallback template used when no native DokuWiki page template is found. | ''===== @TITLE@ ====='' |
 | default_start_mode | Default creation mode. | ''start'' |
+| show_subpage_button_in_page_menu | Adds a ''Create a subpage'' button to the page menu. | ''0'' |
 
 Possible values for ''default_start_mode'':
   * ''ask'': show a selector in the dialog;
   * ''start'': create a start page;
   * ''none'': create a direct page;
   * ''same'': create a subpage with the same name.
+
+When ''show_subpage_button_in_page_menu'' is enabled, the plugin also registers the DokuWiki action ''newpagefill_subpage''.
+This action can be disabled through the global ''disableactions'' setting.
 
 ===== Placeholders =====
 

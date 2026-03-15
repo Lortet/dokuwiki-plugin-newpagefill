@@ -11,3 +11,5 @@ $lang['js']['dialog_page_mode_same'] = 'Unterseite mit gleichem Namen';
 $lang['js']['dialog_create'] = 'Erstellen';
 $lang['js']['dialog_cancel'] = 'Abbrechen';
 $lang['js']['dialog_required'] = 'Der Bezeichner ist erforderlich.';
+$lang['page_action_subpage'] = 'Unterseite erstellen';
+$lang['page_action_subpage_title'] = 'Eine Unterseite in diesem Namensraum erstellen';

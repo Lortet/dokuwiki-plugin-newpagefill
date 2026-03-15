@@ -24,6 +24,14 @@ Otherwise, the plugin applies its own configured fallback template.
 In the configuration manager:
 - `template`: fallback template used only when no native DokuWiki page template is found;
 - `default_start_mode`: default page creation mode (`ask`, `start`, `none`, `same`).
+- `show_subpage_button_in_page_menu`: adds a `Create a subpage` button to the page menu.
+
+When `show_subpage_button_in_page_menu` is enabled, the plugin also exposes the DokuWiki action `newpagefill_subpage`.
+You can hide this button through `disableactions`, for example:
+
+```text
+newpagefill_subpage
+```
 
 This template may contain:
 - `@TITLE@`: title computed by the plugin (specific to newpagefill);

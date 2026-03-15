@@ -11,3 +11,5 @@ $lang['js']['dialog_page_mode_same'] = 'Subpage with same name';
 $lang['js']['dialog_create'] = 'Create';
 $lang['js']['dialog_cancel'] = 'Cancel';
 $lang['js']['dialog_required'] = 'The identifier is required.';
+$lang['page_action_subpage'] = 'Create a subpage';
+$lang['page_action_subpage_title'] = 'Create a subpage in this namespace';

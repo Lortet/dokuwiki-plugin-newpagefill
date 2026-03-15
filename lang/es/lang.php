@@ -11,3 +11,5 @@ $lang['js']['dialog_page_mode_same'] = 'Subpágina con el mismo nombre';
 $lang['js']['dialog_create'] = 'Crear';
 $lang['js']['dialog_cancel'] = 'Cancelar';
 $lang['js']['dialog_required'] = 'El identificador es obligatorio.';
+$lang['page_action_subpage'] = 'Crear una subpágina';
+$lang['page_action_subpage_title'] = 'Crear una subpágina en este espacio de nombres';

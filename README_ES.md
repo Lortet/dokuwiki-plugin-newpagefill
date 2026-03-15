@@ -24,6 +24,14 @@ De lo contrario, el plugin aplica su propia plantilla de reserva configurada.
 En el gestor de configuración:
 - `template`: plantilla de reserva utilizada solo cuando no se encuentra ninguna plantilla de página nativa de DokuWiki;
 - `default_start_mode`: modo de creación de página predeterminado (`ask`, `start`, `none`, `same`).
+- `show_subpage_button_in_page_menu`: anade un boton `Crear una subpagina` al menu de pagina.
+
+Cuando `show_subpage_button_in_page_menu` esta activado, el plugin tambien expone la accion DokuWiki `newpagefill_subpage`.
+Por lo tanto, este boton puede ocultarse mediante `disableactions`, por ejemplo:
+
+```text
+newpagefill_subpage
+```
 
 Esta plantilla puede contener:
 - `@TITLE@`: título calculado por el plugin (específico de newpagefill);

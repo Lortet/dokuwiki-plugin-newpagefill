@@ -44,12 +44,16 @@ También complementa el sistema de plantillas nativo de DokuWiki:
 ^ Nombre ^ Descripción ^ Valor predeterminado ^
 | template | Plantilla de reserva utilizada cuando no se encuentra ninguna plantilla de página nativa de DokuWiki. | ''===== @TITLE@ ====='' |
 | default_start_mode | Modo de creación predeterminado. | ''start'' |
+| show_subpage_button_in_page_menu | Anade un boton ''Crear una subpagina'' al menu de pagina. | ''0'' |
 
 Valores posibles para ''default_start_mode'':
   * ''ask'': mostrar un selector en el diálogo;
   * ''start'': crear una página de inicio;
   * ''none'': crear una página directa;
   * ''same'': crear una subpágina con el mismo nombre.
+
+Cuando ''show_subpage_button_in_page_menu'' está activado, el plugin también registra la acción DokuWiki ''newpagefill_subpage''.
+Esta acción puede desactivarse mediante la opción global ''disableactions''.
 
 ===== Marcadores =====
 

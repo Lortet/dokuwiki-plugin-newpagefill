@@ -44,12 +44,16 @@ Es ergänzt auch das native DokuWiki-Vorlagensystem:
 ^ Name ^ Beschreibung ^ Standardwert ^
 | template | Ersatzvorlage, die verwendet wird, wenn keine native DokuWiki-Seitenvorlage gefunden wird. | ''===== @TITLE@ ====='' |
 | default_start_mode | Standard-Erstellungsmodus. | ''start'' |
+| show_subpage_button_in_page_menu | Fuegt dem Seitenmenue eine Schaltflaeche ''Unterseite erstellen'' hinzu. | ''0'' |
 
 Mögliche Werte für ''default_start_mode'':
   * ''ask'': Auswahl im Dialog anzeigen;
   * ''start'': Startseite erstellen;
   * ''none'': direkte Seite erstellen;
   * ''same'': Unterseite mit gleichem Namen erstellen.
+
+Wenn ''show_subpage_button_in_page_menu'' aktiviert ist, registriert das Plugin zusätzlich die DokuWiki-Aktion ''newpagefill_subpage''.
+Diese Aktion kann über die globale Einstellung ''disableactions'' deaktiviert werden.
 
 ===== Platzhalter =====
 

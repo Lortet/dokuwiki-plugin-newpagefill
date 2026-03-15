@@ -44,12 +44,16 @@ Il complète aussi le système de templates natif de DokuWiki :
 ^ Nom ^ Description ^ Valeur par défaut ^
 | template | Template de secours utilisé si aucun template natif DokuWiki n'est trouvé. | ''===== @TITLE@ ====='' |
 | default_start_mode | Mode par défaut de création. | ''start'' |
+| show_subpage_button_in_page_menu | Ajoute un bouton ''Créer une sous-page'' dans le menu des pages. | ''0'' |
 
 Valeurs possibles pour ''default_start_mode'' :
   * ''ask'' : affiche un sélecteur dans la popup ;
   * ''start'' : crée une page de démarrage ;
   * ''none'' : crée une page directe ;
   * ''same'' : crée une sous-page du même nom.
+
+Si ''show_subpage_button_in_page_menu'' est activé, le plugin enregistre aussi l'action DokuWiki ''newpagefill_subpage''.
+Cette action peut être désactivée via le paramètre global ''disableactions''.
 
 ===== Placeholders =====
 
