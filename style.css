@@ -47,6 +47,25 @@
   color: #b42318;
 }
 
+.newpagefill_target {
+  margin: 10px 0 0;
+  font-size: 0.95em;
+  word-break: break-word;
+}
+
+.newpagefill_target_label {
+  font-weight: bold;
+}
+
+.newpagefill_target_value a {
+  display: inline-block;
+}
+
+.newpagefill_target_value .newpagefill_target_current {
+  color: #b42318;
+  font-weight: 600;
+}
+
 .newpagefill_actions {
   display: flex;
   justify-content: flex-end;

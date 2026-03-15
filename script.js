@@ -41,6 +41,65 @@
             : {};
     }
 
+    function renderDialogTitle(titleEl, baseTitle, namespace) {
+        const cleanedTitle = String(baseTitle || '').trim() || 'Creer une nouvelle page';
+        const cleanedNamespace = String(namespace || '').trim().replace(/^:+|:+$/g, '');
+
+        titleEl.textContent = '';
+        titleEl.appendChild(document.createTextNode(cleanedTitle));
+        if (!cleanedNamespace) return;
+
+        titleEl.appendChild(document.createTextNode(' dans « '));
+        cleanedNamespace.split(':').forEach(function (part, index, allParts) {
+            const span = document.createElement('span');
+            span.textContent = part;
+            titleEl.appendChild(span);
+
+            if (index < allParts.length - 1) {
+                titleEl.appendChild(document.createTextNode(' > '));
+            }
+        });
+        titleEl.appendChild(document.createTextNode(' »'));
+    }
+
+    function buildPageHref(pageId, config) {
+        const cleanedPageId = String(pageId || '').trim().replace(/^:+|:+$/g, '');
+        if (!cleanedPageId) return '';
+
+        if (Number(config.userewrite) === 1) {
+            const root = typeof DOKU_BASE !== 'undefined' && DOKU_BASE ? DOKU_BASE : '/';
+            return root.replace(/\/$/, '') + '/' + cleanedPageId.split(':').map(encodeURIComponent).join('/');
+        }
+
+        return buildBaseHref('', config) + (buildBaseHref('', config).indexOf('?') >= 0 ? '&' : '?') + 'id=' + encodeURIComponent(cleanedPageId);
+    }
+
+    function buildCreationTarget(namespace, pageId, startOption, config, shouldAskStartMode) {
+        const cleanedNamespace = String(namespace || '').trim();
+        const cleanedPageId = String(pageId || '').trim();
+        if (!cleanedPageId) {
+            return {pageId: '', href: ''};
+        }
+
+        const effectiveStartOption = shouldAskStartMode ? startOption : config.start;
+        const startSegment = resolveStartSegment(cleanedPageId, effectiveStartOption, config.defaultStart, config.defaultStartMode);
+        const targetPageId = buildTargetPageId(cleanedNamespace, cleanedPageId, startSegment);
+        let href;
+
+        if (Number(config.userewrite) === 1) {
+            const baseHref = buildBaseHref(cleanedNamespace, config);
+            href = baseHref + '/' + encodeURIComponent(cleanedPageId);
+            if (startSegment) {
+                href += '/' + encodeURIComponent(startSegment);
+            }
+        } else {
+            href = buildBaseHref('', config);
+            href = appendToUrl(href, 'id=' + encodeURIComponent(targetPageId));
+        }
+
+        return {pageId: targetPageId, href};
+    }
+
     function resolveSubpageNamespace(currentPageId, startPageName) {
         const cleanedId = String(currentPageId || '').trim().replace(/^:+|:+$/g, '');
         const cleanedStart = String(startPageName || '').trim().replace(/^:+|:+$/g, '');
@@ -167,6 +226,7 @@
             '    <select id="newpagefill_input_mode"></select>',
             '  </div>',
             '  <p class="newpagefill_error" aria-live="polite"></p>',
+            '  <p class="newpagefill_target"><span class="newpagefill_target_label"></span> <span class="newpagefill_target_value"></span></p>',
             '  <div class="newpagefill_actions">',
             '    <button type="button" class="newpagefill_cancel"></button>',
             '    <button type="button" class="newpagefill_create"></button>',
@@ -199,6 +259,9 @@
         const modeInput = overlay.querySelector('#newpagefill_input_mode');
         const idInput = overlay.querySelector('#newpagefill_input_id');
         const errorEl = overlay.querySelector('.newpagefill_error');
+        const targetEl = overlay.querySelector('.newpagefill_target');
+        const targetLabelEl = overlay.querySelector('.newpagefill_target_label');
+        const targetValueEl = overlay.querySelector('.newpagefill_target_value');
         const cancelBtn = overlay.querySelector('.newpagefill_cancel');
         const createBtn = overlay.querySelector('.newpagefill_create');
         const pluginConfig = getPluginConfig();
@@ -216,11 +279,12 @@
                 : pluginConfig.userewrite
         };
 
-        titleEl.textContent = strings.title;
+        renderDialogTitle(titleEl, strings.title, config.namespace);
         titleLabel.textContent = strings.pageTitle;
         namespaceLabel.textContent = strings.namespace;
         modeLabel.textContent = strings.pageMode;
         idLabel.textContent = strings.pageId;
+        targetLabelEl.textContent = strings.targetPreview || 'Page cible :';
         cancelBtn.textContent = strings.cancel;
         createBtn.textContent = strings.create;
         errorEl.textContent = '';
@@ -250,6 +314,41 @@
             idInput.value = slugifyTitle(titleInput.value, config);
         }
 
+        function updateTargetPreview() {
+            const namespaceValue = (namespaceRow.style.display === 'none' ? config.namespace : namespaceInput.value).trim();
+            const pageIdValue = idInput.value.trim();
+            const target = buildCreationTarget(namespaceValue, pageIdValue, modeInput.value, config, shouldAskStartMode);
+
+            renderDialogTitle(titleEl, strings.title, namespaceValue || config.namespace);
+
+            if (!target.pageId || !target.href) {
+                targetEl.style.display = 'none';
+                targetValueEl.textContent = '';
+                return;
+            }
+
+            targetValueEl.textContent = '';
+            const link = document.createElement('a');
+            link.href = buildPageHref(target.pageId, config);
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            const normalizedNamespace = namespaceValue.replace(/^:+|:+$/g, '');
+            const highlightedSuffix = normalizedNamespace && target.pageId.indexOf(normalizedNamespace + ':') === 0
+                ? target.pageId.slice(normalizedNamespace.length + 1)
+                : target.pageId;
+
+            if (normalizedNamespace && highlightedSuffix !== target.pageId) {
+                link.appendChild(document.createTextNode(normalizedNamespace + ':'));
+            }
+
+            const suffixSpan = document.createElement('span');
+            suffixSpan.className = 'newpagefill_target_current';
+            suffixSpan.textContent = highlightedSuffix;
+            link.appendChild(suffixSpan);
+            targetValueEl.appendChild(link);
+            targetEl.style.display = '';
+        }
+
         function closeDialog() {
             overlay.classList.remove('is-open');
             document.removeEventListener('keydown', handleKeydown);
@@ -266,20 +365,8 @@
             }
 
             const namespace = namespaceValue || config.namespace;
-            const startOption = shouldAskStartMode ? modeInput.value : config.start;
-            const startSegment = resolveStartSegment(idValue, startOption, config.defaultStart, config.defaultStartMode);
-            let targetUrl;
-
-            if (Number(config.userewrite) === 1) {
-                const baseHref = buildBaseHref(namespace, config);
-                targetUrl = baseHref + '/' + encodeURIComponent(idValue);
-                if (startSegment) {
-                    targetUrl += '/' + encodeURIComponent(startSegment);
-                }
-            } else {
-                targetUrl = buildBaseHref('', config);
-                targetUrl = appendToUrl(targetUrl, 'id=' + encodeURIComponent(buildTargetPageId(namespace, idValue, startSegment)));
-            }
+            const target = buildCreationTarget(namespace, idValue, modeInput.value, config, shouldAskStartMode);
+            let targetUrl = target.href;
 
             targetUrl = appendToUrl(targetUrl, 'do=edit');
             if (titleValue) {
@@ -306,15 +393,28 @@
         idInput.value = '';
         idDirty = false;
         updateSuggestedId();
+        updateTargetPreview();
 
         titleInput.oninput = function () {
             errorEl.textContent = '';
             updateSuggestedId();
+            updateTargetPreview();
         };
 
         idInput.oninput = function () {
             errorEl.textContent = '';
             idDirty = idInput.value.trim() !== slugifyTitle(titleInput.value, config);
+            updateTargetPreview();
+        };
+
+        namespaceInput.oninput = function () {
+            errorEl.textContent = '';
+            updateTargetPreview();
+        };
+
+        modeInput.onchange = function () {
+            errorEl.textContent = '';
+            updateTargetPreview();
         };
 
         cancelBtn.onclick = closeDialog;
